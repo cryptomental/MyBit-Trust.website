@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import getWeb3Async from './web3';
+import { message } from 'antd';
 import * as TrustFactoryRopsten from '../constants/contracts/ropsten/TrustFactory';
 import * as TrustRopsten from '../constants/contracts/ropsten/Trust';
 import * as MyBitBurnerRopsten from '../constants/contracts/ropsten/MyBitBurner';
@@ -12,10 +13,13 @@ import * as MyBitTokenMainnet from '../constants/contracts/mainnet/MyBitToken';
 
 import { ETHERSCAN_TX, ETHERSCAN_TX_FULL_PAGE } from '../constants';
 import axios from 'axios';
-const Web3 = getWeb3Async();
 
+
+const Web3 = getWeb3Async();
 const burnValue = "250";
 const burnValueWei = Web3.utils.toWei(burnValue, 'ether');
+
+
 
 const getContract = (name, network, address) => {
   let contract = undefined;

@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 
+
 const getWeb3Async = () => {
   if (window.web3) {
     // Injected Web3 detected. Use Mist/MetaMask's provider.
@@ -10,6 +11,6 @@ const getWeb3Async = () => {
     window.web3 = new Web3(provider);
   }
   return window.web3;
-};
+}
 
 export default getWeb3Async;

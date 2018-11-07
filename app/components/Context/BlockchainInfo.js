@@ -58,9 +58,9 @@ class BlockchainInfo extends React.Component {
     } catch (err) {
       console.log(err);
     }
-    Web3.currentProvider.publicConfigStore.on("update", data => {
+    window.web3.currentProvider.publicConfigStore.on("update", data => {
       if (
-        data["selectedAddress"].toUpperCase() !==
+        data["selectedAddress"] && data["selectedAddress"].toUpperCase() !==
         this.state.user.userName.toUpperCase()
       )
         window.location.reload();

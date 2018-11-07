@@ -14,6 +14,7 @@ import Input from 'components/Input';
 import Web3 from '../../utils/core';
 import Constants from 'components/Constants';
 import Checkbox from 'antd/lib/checkbox';
+import { message } from 'antd';
 import LoadingIndicator from 'components/LoadingIndicator';
 import ConnectionStatus from 'components/ConnectionStatus';
 
@@ -49,13 +50,52 @@ export default class CreateNewPage extends React.Component {
       shouldConfirm: false,
       isLoading: false,
       acceptedToS: false,
+      metamaskInstalled: false,
+      metamaskUnlocked: false,
     }
     this.details = [];
+    this.handleMetamask = this.handleMetamask.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleAlertClosed = this.handleAlertClosed.bind(this);
     this.handleTermsAndConditionsClicked = this.handleTermsAndConditionsClicked.bind(this);
+  }
+
+  async componentDidMount() {
+    this.handleMetamask();
+  }
+
+  handleMetamask() {
+    if (!Web3.currentProvider.isMetaMask) {
+      this.setState({
+        metamaskInstalled: false,
+        alertType: 'error',
+        alertMessage: "Please install Metamask!" });
+    } else {
+      this.setState({metamaskInstalled: true});
+      setTimeout(() => {
+        Web3.eth.getAccounts((err, accounts) => {
+          if (err || accounts.length == 0) {
+            this.setState({
+              metamaskUnlocked: false,
+              alertType: 'error',
+              alertMessage: "Please unlock Metamask!"
+            });
+          } else {
+            this.setState({metamaskUnlocked: true});
+          }
+        })
+      }, 1000)
+    }
+
+    window.web3.currentProvider.publicConfigStore.on("update", data => {
+      if (
+        !data["selectedAddress"] || (data["selectedAddress"] && data["selectedAddress"].toUpperCase() !==
+        this.props.user.userName.toUpperCase())
+      )
+        window.location.reload();
+    });
   }
 
   handleClose(){
@@ -160,7 +200,10 @@ export default class CreateNewPage extends React.Component {
 
   render() {
     let toRender = [];
-    if(this.props.loading){
+
+    if (this.state.metamaskInstalled && this.state.metamaskUnlocked) {
+
+    if(this.props.loading) {
       return <LoadingIndicator />
     }
 
@@ -172,6 +215,7 @@ export default class CreateNewPage extends React.Component {
         loading={this.props.loadingNetwork}
       />
     )
+    }
 
     const content = (
       <div key="content">

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { message } from 'antd';
 
 const StyledCircleIndicator = styled.div`
   width: 6px;
